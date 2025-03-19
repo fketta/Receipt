@@ -15,16 +15,37 @@
     <div class="certificate">
         <h1>Certificate of Completion</h1>
         <p>This is to certify that</p>
-        <h2 id="student-name">{name}</h2>
+        <h2 id="student-name">Loading...</h2>
         <p>has successfully completed the course</p>
-        <h3 id="course-name">{course}</h3>
-        <p>on <span id="completion-date">{date}</span></p>
+        <h3 id="course-name">Loading...</h3>
+        <p>on <span id="completion-date">Loading...</span></p>
     </div>
 
     <button class="download-btn" onclick="downloadPDF()">Download as PDF</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
+        async function loadCertificateData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const studentId = urlParams.get("id"); 
+
+            if (!studentId) {
+                document.body.innerHTML = "<h2>Error: No student ID provided!</h2>";
+                return;
+            }
+
+            try {
+                const response = await fetch(`./data/${studentId}.json`);
+                const data = await response.json();
+
+                document.getElementById("student-name").textContent = data.name;
+                document.getElementById("course-name").textContent = data.course;
+                document.getElementById("completion-date").textContent = data.date;
+            } catch (error) {
+                document.body.innerHTML = "<h2>Error: Certificate not found!</h2>";
+            }
+        }
+
         function downloadPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
@@ -36,6 +57,8 @@
             doc.text("on " + document.getElementById("completion-date").textContent, 20, 80);
             doc.save("certificate.pdf");
         }
+
+        loadCertificateData();
     </script>
 </body>
 </html>

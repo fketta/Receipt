@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate of Completion</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        .certificate { border: 5px solid gold; padding: 20px; width: 80%; margin: auto; }
+        h1 { color: darkblue; }
+        .download-btn { margin-top: 20px; padding: 10px; background: green; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="certificate">
+        <h1>Certificate of Completion</h1>
+        <p>This is to certify that</p>
+        <h2 id="student-name">{name}</h2>
+        <p>has successfully completed the course</p>
+        <h3 id="course-name">{course}</h3>
+        <p>on <span id="completion-date">{date}</span></p>
+    </div>
+
+    <button class="download-btn" onclick="downloadPDF()">Download as PDF</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script>
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Certificate of Completion", 20, 20);
+            doc.text("This is to certify that", 20, 40);
+            doc.text(document.getElementById("student-name").textContent, 20, 50);
+            doc.text("has successfully completed the course", 20, 60);
+            doc.text(document.getElementById("course-name").textContent, 20, 70);
+            doc.text("on " + document.getElementById("completion-date").textContent, 20, 80);
+            doc.save("certificate.pdf");
+        }
+    </script>
+</body>
+</html>
